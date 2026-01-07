@@ -1,0 +1,59 @@
+.include TSMC_180nm.txt
+.param LAMBDA=0.09u
+.param width_P=20*LAMBDA
+.param width_N=10*LAMBDA
+.global gnd vdd
+Vdd vdd gnd 1.8
+
+Va a gnd pulse 0 1.8 0ns 100ps 100ps 20ns 40ns
+Vb b gnd pulse 0 1.8 0ns 100ps 100ps 40ns 80ns
+
+* SPICE3 file created from and.ext - technology: scmos
+
+.option scale=90n
+
+M1000 in a vdd w_n170_39# CMOSP w=20 l=2
++  ad=100p pd=30u as=0.14n ps=54u
+M1001 out in vdd w_n170_39# CMOSP w=20 l=2
++  ad=0.16n pd=56u as=0.12n ps=52u
+M1002 out in gnd gnd CMOSN w=6 l=2
++  ad=48p pd=28u as=36p ps=24u
+M1003 in b a_n155_12# gnd CMOSN w=20 l=2
++  ad=0.12n pd=52u as=100p ps=30u
+M1004 a_n155_12# a gnd gnd CMOSN w=20 l=2
++  ad=100p pd=30u as=0.14n ps=54u
+M1005 vdd b in w_n170_39# CMOSP w=20 l=2
++  ad=0.12n pd=52u as=100p ps=30u
+C0 in a_n155_12# 0
+C1 w_n170_39# a 0.02666f
+C2 w_n170_39# b 0.02666f
+C3 gnd a_n155_12# 0
+C4 w_n170_39# in 0.03323f
+C5 a in 0.00254f
+C6 w_n170_39# vdd 0.0263f
+C7 a vdd 0.0055f
+C8 w_n170_39# out 0.00792f
+C9 b in 0.00868f
+C10 b vdd 0.0055f
+C11 a gnd 0.00161f
+C12 in vdd 0.02013f
+C13 b gnd 0
+C14 in out 0.04333f
+C15 in gnd 0.04237f
+C16 gnd 0 0.24383f 
+C17 out 0 0.05528f 
+C18 vdd 0 0.14812f 
+C19 in 0 0.31192f 
+C20 b 0 0.19193f 
+C21 a 0 0.19193f 
+C22 w_n170_39# 0 2.35733f 
+
+.tran 10p 200n
+.control
+run
+set curplottitle = 'A.Pranav_2024102038'
+set color0 = white
+set color1=black
+set linewidth=10
+plot v(out) v(b)+2 v(a)+4
+.endc

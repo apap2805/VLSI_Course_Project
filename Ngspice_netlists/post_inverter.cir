@@ -1,0 +1,39 @@
+.include TSMC_180nm.txt
+.param LAMBDA=0.09u
+.param width_P=20*LAMBDA
+.param width_N=10*LAMBDA
+.global gnd vdd
+Vdd vdd gnd 1.8
+Vin in gnd pulse 0 1.8 5ns 100ps 100ps 20ns 40ns
+
+
+* SPICE3 file created from inverter.ext - technology: scmos
+
+.option scale=90n
+
+M1000 out in gnd Gnd CMOSN w=10 l=2
++  ad=80p pd=36u as=60p ps=32u
+M1001 out in vdd w_n15_n2# CMOSP w=20 l=2
++  ad=0.16n pd=56u as=0.12n ps=52u
+C0 out in 0.04365f
+C1 w_n15_n2# out 0.00792f
+C2 in gnd 0.02167f
+C3 in vdd 0.00182f
+C4 w_n15_n2# in 0.02467f
+C5 w_n15_n2# vdd 0.00602f
+C6 gnd 0 0.03173f 
+C7 out 0 0.06316f 
+C8 vdd 0 0.06602f 
+C9 in 0 0.18951f 
+C10 w_n15_n2# 0 1.15707f
+
+.tran 10p 200n
+
+.control
+run
+set curplottitle = 'A.Pranav_2024102038'
+set color0 = white
+set color1=black
+set linewidth=10
+plot v(out) v(in)+2
+.endc

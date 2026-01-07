@@ -1,0 +1,110 @@
+.include TSMC_180nm.txt
+.include gates.cir
+.param LAMBDA=0.09u
+.param width_P=20*LAMBDA
+.param width_N=10*LAMBDA
+.global gnd vdd
+
+Vdd vdd gnd 1.8
+V_clk clk gnd pulse 1.8 0 2ps 1ps 1ps 363.58ps 727.17ps
+Va0 da0 gnd 1.8
+Va1 da1 gnd 1.8
+Va2 da2 gnd 0
+Va3 da3 gnd 1.8
+Va4 da4 gnd 1.8
+Vb0 db0 gnd 0
+Vb1 db1 gnd 1.8
+Vb2 db2 gnd 1.8
+Vb3 db3 gnd 0
+Vb4 db4 gnd 1.8
+
+
+//input flops
+xd1 da0 clk a0 vdd gnd DFF
+xd2 da1 clk a1 vdd gnd DFF
+xd3 da2 clk a2 vdd gnd DFF
+xd4 da3 clk a3 vdd gnd DFF
+xd5 da4 clk a4 vdd gnd DFF
+xd6 db0 clk b0 vdd gnd DFF
+xd7 db1 clk b1 vdd gnd DFF
+xd8 db2 clk b2 vdd gnd DFF
+xd9 db3 clk b3 vdd gnd DFF
+xd10 db4 clk b4 vdd gnd DFF
+
+
+//gi's for carry (nand is enough)
+XNAND0 a0 b0 g0_comp vdd gnd NAND
+XNAND1 a1 b1 g1_comp vdd gnd NAND
+XNAND2 a2 b2 g2_comp vdd gnd NAND
+XNAND3 a3 b3 g3_comp vdd gnd NAND
+XNAND4 a4 b4 g4_comp vdd gnd NAND
+
+//pi's for sum
+xp0 a0 b0  gnd vdd P0_sum XOR
+xp1 a1 b1  gnd vdd P1_sum XOR
+xp2 a2 b2  gnd vdd P2_sum XOR
+xp3 a3 b3  gnd vdd P3_sum XOR
+xp4 a4 b4  gnd vdd P4_sum XOR
+
+//PROPOGATE USING NOR LOGIC (for carry)
+XNOR0  p0_comp a0 b0 gnd vdd NOR
+XNOR1  p1_comp a1 b1 gnd vdd NOR
+XNOR2  p2_comp a2 b2 gnd vdd NOR
+XNOR3  p3_comp a3 b3 gnd vdd NOR
+XNOR4  p4_comp a4 b4 gnd vdd NOR
+
+
+// carry 1
+xi1 g0_comp C1 vdd gnd inverter
+
+// carry 2
+XOR0 g0_comp p1_comp gnd vdd out1 OR
+XNAND5 g1_comp out1 C2 vdd gnd NAND
+
+//carry 3
+XNOR5 out2 p1_comp p2_comp gnd vdd NOR
+XAND0 C1 out2 out3 vdd gnd AND
+XOR1 p2_comp g1_comp gnd vdd out4 OR
+XNAND6 out4 g2_comp out5 vdd gnd NAND
+XOR2 out5 out3 gnd vdd C3 OR
+
+//carry 4
+XNOR6 out6 p2_comp p3_comp gnd vdd NOR
+XAND1 C2 out6 out7 vdd gnd AND
+XOR3 p3_comp g2_comp gnd vdd out8 OR
+XNAND7 out8 g3_comp out9 vdd gnd NAND
+XOR4 out9 out7 gnd vdd C4 OR
+
+//carry 5
+XNOR7 out10 p3_comp p4_comp gnd vdd NOR
+XAND2 C3 out10 out11 vdd gnd AND
+XOR5 p4_comp g3_comp gnd vdd out12 OR
+XNAND8 out12 g4_comp out13 vdd gnd NAND
+XOR6 out11 out13 gnd vdd C5 OR
+
+//sum
+XXOR1 P1_sum C1 gnd vdd S1 XOR
+XXOR2 P2_sum C2 gnd vdd S2 XOR
+XXOR3 P3_sum C3 gnd vdd S3 XOR
+XXOR4 P4_sum C4 gnd vdd S4 XOR
+
+//output flops
+xd11 P0_sum clk S0_out vdd gnd DFF
+xd12 S1 clk S1_out vdd gnd DFF
+xd13 S2 clk S2_out vdd gnd DFF
+xd14 S3 clk S3_out vdd gnd DFF
+xd15 S4 clk S4_out vdd gnd DFF
+xd16 C5 clk C5_out vdd gnd DFF
+
+
+
+.tran 10ps 2000000ps
+.control
+run
+set curplottitle='A.Pranav 2024102038'
+set color0 = white
+set color1=black
+set linewidth=10
+
+plot v(S0_out) v(S1_out)+2 v(S2_out)+4 v(S3_out)+6 v(S4_out)+8  v(C5_out)+10 v(clk)+12
+.endc

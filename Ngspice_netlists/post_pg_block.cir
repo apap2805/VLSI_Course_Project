@@ -1,0 +1,67 @@
+.include TSMC_180nm.txt
+.param LAMBDA=0.09u
+.param width_P=20*LAMBDA
+.param width_N=10*LAMBDA
+.global gnd vdd
+Vdd vdd gnd 1.8
+
+Va a gnd pulse 0 1.8 0ns 100ps 100ps 20ns 40ns
+Vb b gnd pulse 0 1.8 0ns 100ps 100ps 40ns 80ns
+
+.option scale=90n
+
+M1000 vdd b g_comp w_n25_20# CMOSP w=20 l=2
++  ad=0.18n pd=58u as=0.16n ps=56u
+M1001 gnd b a_n19_n13# gnd CMOSN w=20 l=2
++  ad=0.24n pd=64u as=100p ps=50u
+M1002 gnd b p_comp gnd CMOSN w=10 l=2
++  ad=0.11n pd=42u as=60p ps=32u
+M1003 p_comp a gnd gnd CMOSN w=10 l=2
++  ad=0.11n pd=42u as=60p ps=32u
+M1004 g_comp a a_n19_n13# gnd CMOSN w=20 l=2
++  ad=0.18n pd=58u as=0.16n ps=56u
+M1005 a_61_26# b vdd w_47_20# CMOSP w=40 l=2
++  ad=0.44n pd=0.102m as=0.24n ps=92u
+M1006 p_comp a a_61_26# w_47_20# CMOSP w=40 l=2
++  ad=0.44n pd=0.102m as=0.24n ps=92u
+M1007 g_comp a vdd w_n25_20# CMOSP w=20 l=2
++  ad=0.18n pd=58u as=0.16n ps=56u
+C0 a g_comp 0.00121f
+C1 vdd g_comp 0.03107f
+C2 a_61_26# p_comp 0.12376f
+C3 w_47_20# a_61_26# 0.01716f
+C4 w_47_20# p_comp 0.00896f
+C5 w_n25_20# b 0.02467f
+C6 b p_comp 0.01103f
+C7 w_47_20# b 0.02491f
+C8 w_n25_20# a 0.02467f
+C9 a p_comp 0.01083f
+C10 b a_n19_n13# 0.00121f
+C11 w_n25_20# vdd 0.01383f
+C12 w_47_20# a 0.02469f
+C13 a a_n19_n13# 0.00226f
+C14 w_47_20# vdd 0.0084f
+C15 w_n25_20# g_comp 0.01317f
+C16 b vdd 0.0055f
+C17 a vdd 0.0055f
+C18 gnd 0 0.38664f 
+C19 a_n19_n13# 0 0.15614f 
+C20 p_comp 0 0.24611f 
+C21 a_61_26# 0 0.02892f 
+C22 g_comp 0 0.10581f 
+C23 vdd 0 0.23883f 
+C24 a 0 0.95569f 
+C25 b 0 0.71868f 
+C26 w_47_20# 0 3.29041f 
+C27 w_n25_20# 0 1.7356f 
+
+
+.tran 10p 200n
+.control
+run
+set curplottitle = 'A.Pranav_2024102038'
+set color0 = white
+set color1=black
+set linewidth=10
+plot v(g_comp) v(p_comp)+2 v(b)+4 v(a)+6
+.endc

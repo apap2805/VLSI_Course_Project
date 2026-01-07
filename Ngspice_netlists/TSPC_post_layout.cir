@@ -1,0 +1,81 @@
+.include TSMC_180nm.txt
+.param LAMBDA=0.09u
+.param width_P=20*LAMBDA
+.param width_N=10*LAMBDA
+.global gnd vdd
+Vdd vdd gnd 1.8
+V_clk clk gnd pulse 0 1.8 5ns 100ps 100ps 20ns 40ns
+V_D d gnd pulse 0 1.8 10ns 100ps 100ps 35ns 70ns
+
+.option scale=90n
+
+M1000 a_24_n37# clk gnd gnd CMOSN w=40 l=2
++  ad=0.12n pd=46u as=0.2n ps=90u
+M1001 q q_b gnd gnd CMOSN w=10 l=2
++  ad=50p pd=30u as=50p ps=30u
+M1002 Y clk vdd w_n24_11# CMOSP w=20 l=2
++  ad=100p pd=50u as=100p ps=50u
+M1003 q_b clk a_54_n17# gnd CMOSN w=20 l=2
++  ad=100p pd=50u as=60p ps=26u
+M1004 q q_b vdd w_n24_11# CMOSP w=20 l=2
++  ad=100p pd=50u as=100p ps=50u
+M1005 X D gnd gnd CMOSN w=9 l=2
++  ad=45p pd=28u as=45p ps=28u
+M1006 Y X a_24_n37# gnd CMOSN w=40 l=2
++  ad=0.28n pd=94u as=0.12n ps=46u
+M1007 a_n8_24# D vdd w_n24_11# CMOSP w=40 l=2
++  ad=80p pd=44u as=0.2n ps=90u
+M1008 q_b Y vdd w_n24_11# CMOSP w=20 l=2
++  ad=100p pd=50u as=100p ps=50u
+M1009 a_54_n17# Y gnd gnd CMOSN w=20 l=2
++  ad=60p pd=26u as=100p ps=50u
+M1010 X clk a_n8_24# w_n24_11# CMOSP w=40 l=2
++  ad=0.44n pd=0.102m as=80p ps=44u
+C0 q q_b 0.04939f
+C1 w_n24_11# Y 0.02665f
+C2 w_n24_11# D 0.03235f
+C3 Y clk 0.14965f
+C4 clk D 0.06232f
+C5 clk gnd 0.0019f
+C6 w_n24_11# q 0.00787f
+C7 w_n24_11# vdd 0.07546f
+C8 clk vdd 0.08543f
+C9 w_n24_11# X 0.01751f
+C10 clk X 0.06538f
+C11 w_n24_11# q_b 0.03495f
+C12 clk q_b 0.01487f
+C13 Y X 0.08401f
+C14 gnd X 0.02157f
+C15 w_n24_11# clk 0.16521f
+C16 Y q_b 0.02946f
+C17 q 0 0.149f 
+C18 gnd 0 0.65467f 
+C19 q_b 0 0.40714f 
+C20 Y 0 0.34823f 
+C21 X 0 0.24967f 
+C22 vdd 0 0.69492f 
+C23 D 0 0.19138f 
+C24 clk 0 1.65901f 
+C25 w_n24_11# 0 5.71202f 
+.tran 10p 500n
+
+.tran 10p 500n
+
+* .measure tran tfall_1 TRIG V(d) VAL=0.9 RISE=1 TARG V(x) VAL=0.9 FALL=1
+* .measure tran trise_1 TRIG V(d) VAL=0.9 FALL=1 TARG V(x) VAL=0.9 RISE=1
+* .measure tran t_setup param='(trise_1+tfall_1)/2'
+
+* .measure tran tfall_1 TRIG V(clk) VAL=0.9 RISE=1 TARG V(q) VAL=0.9 RISE=1
+* .measure tran trise_1 TRIG V(clk) VAL=0.9 RISE=2 TARG V(q) VAL=0.9 FALL=1
+* .measure tran t_CQ param='(trise_1+tfall_1)/2'
+
+.measure tran td_xy TRIG V(clk) VAL=0.9 RISE=1 TARG V(y) VAL=0.9 FALL=1
+
+.control
+run
+set curplottitle = 'A.Pranav_2024102038'
+set color0 = white
+set color1=black
+set linewidth=10
+plot v(q) v(d)+2 v(clk)+4
+.endc

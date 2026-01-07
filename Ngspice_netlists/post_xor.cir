@@ -1,0 +1,72 @@
+.include TSMC_180nm.txt
+.param LAMBDA=0.09u
+.param width_P=20*LAMBDA
+.param width_N=10*LAMBDA
+.global gnd vdd
+Vdd vdd gnd 1.8
+
+Va a gnd pulse 0 1.8 0ns 100ps 100ps 20ns 40ns
+Vb b gnd pulse 0 1.8 0ns 100ps 100ps 40ns 80ns
+
+.option scale=90n
+
+* SPICE3 file created from xor.ext - technology: scmos
+
+.option scale=90n
+
+M1000 q q_comp vdd w_63_n51# CMOSP w=20 l=2
++  ad=0.16n pd=56u as=100p ps=50u
+M1001 b_comp b vdd w_n18_n11# CMOSP w=20 l=2
++  ad=100p pd=50u as=100p ps=50u
+M1002 vdd a a_comp w_n18_n11# CMOSP w=20 l=2
++  ad=100p pd=50u as=100p ps=50u
+M1003 gnd a a_comp gnd CMOSN w=10 l=2
++  ad=50p pd=30u as=50p ps=30u
+M1004 b_comp b gnd gnd CMOSN w=10 l=2
++  ad=50p pd=30u as=50p ps=30u
+M1005 q_comp b_comp a_comp gnd CMOSN w=20 l=2
++  ad=60p pd=26u as=100p ps=50u
+M1006 q q_comp gnd gnd CMOSN w=10 l=2
++  ad=80p pd=36u as=55p ps=32u
+M1007 a b q_comp gnd CMOSN w=20 l=2
++  ad=0.16n pd=56u as=60p ps=26u
+C0 gnd a_comp 0.04826f
+C1 w_n18_n11# b 0.02471f
+C2 w_n18_n11# b_comp 0.00869f
+C3 q q_comp 0.04365f
+C4 q_comp w_63_n51# 0.02488f
+C5 q_comp a_comp 0.34915f
+C6 a a_comp 0.00327f
+C7 b a 0.00264f
+C8 w_63_n51# vdd 0.00598f
+C9 q_comp gnd 0.02955f
+C10 w_n18_n11# a 0.02467f
+C11 b vdd 0.50237f
+C12 q w_63_n51# 0.00792f
+C13 w_n18_n11# vdd 0.01305f
+C14 q_comp a 0.02753f
+C15 b b_comp 0.06098f
+C16 q_comp vdd 0.00182f
+C17 a vdd 0.10064f
+C18 w_n18_n11# a_comp 0.00804f
+C19 q 0 0.05785f 
+C20 q_comp 0 0.36367f 
+C21 vdd 0 0.42839f 
+C22 a_comp 0 0.42959f 
+C23 b_comp 0 0.29509f 
+C24 b 0 0.39807f 
+C25 a 0 1.64363f 
+C26 w_63_n51# 0 0.96422f 
+C27 w_n18_n11# 0 1.28563f 
+
+
+
+.tran 10p 200n
+.control
+run
+set curplottitle = 'A.Pranav_2024102038'
+set color0 = white
+set color1=black
+set linewidth=10
+plot v(q) v(b)+2 v(a)+4
+.endc

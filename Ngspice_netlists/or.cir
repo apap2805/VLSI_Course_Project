@@ -1,0 +1,61 @@
+
+.include TSMC_180nm.txt
+.param LAMBDA=0.09u
+.param width_P=20*LAMBDA
+.param width_N=10*LAMBDA
+.global gnd vdd
+Vdd vdd gnd 1.8
+
+Va a gnd pulse 0 1.8 0ns 100ps 100ps 20ns 40ns
+Vb b gnd pulse 0 1.8 0ns 100ps 100ps 40ns 80ns
+
+
+
+
+* SPICE3 file created from or.ext - technology: scmos
+
+.option scale=90n
+
+M1000 a_n139_75# a a_n148_75# w_n154_69# CMOSP w=40 l=2
++  ad=0.46n pd=63u as=0.28n ps=94u
+M1001 out a_n148_75# gnd gnd CMOSN w=6 l=2
++  ad=48p pd=28u as=36p ps=24u
+M1002 a_n148_75# a gnd gnd CMOSN w=10 l=2
++  ad=0.115n pd=33u as=70p ps=34u
+M1003 vdd b a_n139_75# w_n154_69# CMOSP w=40 l=2
++  ad=0.44n pd=0.102m as=0.46n ps=63u
+M1004 gnd b a_n148_75# gnd CMOSN w=10 l=2
++  ad=0.11n pd=42u as=0.115n ps=33u
+M1005 out a_n148_75# vdd w_n154_69# CMOSP w=20 l=2
++  ad=0.16n pd=56u as=0.12n ps=52u
+C0 b a_n148_75# 0.00808f
+C1 w_n154_69# vdd 0.01655f
+C2 w_n154_69# out 0.00792f
+C3 b vdd 0.06953f
+C4 a_n148_75# vdd 0.00184f
+C5 a gnd 0.00405f
+C6 a_n148_75# out 0.04333f
+C7 b gnd 0.00477f
+C8 a_n148_75# gnd 0.15676f
+C9 w_n154_69# a 0.02866f
+C10 w_n154_69# b 0.02866f
+C11 w_n154_69# a_n148_75# 0.03379f
+C12 a a_n148_75# 0.00986f
+C13 gnd 0 0.21974f 
+C14 out 0 0.05528f 
+C15 vdd 0 0.28429f 
+C16 a_n148_75# 0 0.41891f 
+C17 b 0 0.24407f 
+C18 a 0 0.22844f 
+C19 w_n154_69# 0 4.17228f 
+
+
+.tran 10p 200n
+.control
+run
+set curplottitle = 'A.Pranav_2024102038'
+set color0 = white
+set color1=black
+set linewidth=10
+plot v(out) v(b)+2 v(a)+4
+.endc
